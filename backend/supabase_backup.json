@@ -1,0 +1,179 @@
+{
+  "profiles": [
+    {
+      "id": "00000000-0000-0000-0000-000000000001",
+      "phone": "+919876543210",
+      "full_name": "Akshay",
+      "username": "akshay",
+      "avatar_url": null,
+      "bio": null,
+      "city": "Chennai",
+      "safety_contact_name": null,
+      "safety_contact_phone": null,
+      "created_at": "2026-11-11T10:40:05.125956+00:00",
+      "outings_attended": 0,
+      "outings_flaked": 0
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111111",
+      "phone": "+919111111111",
+      "full_name": "Siddharth R",
+      "username": "sid_r",
+      "avatar_url": null,
+      "bio": null,
+      "city": "Chennai",
+      "safety_contact_name": null,
+      "safety_contact_phone": null,
+      "created_at": "2026-11-11T11:05:31.956841+00:00",
+      "outings_attended": 9,
+      "outings_flaked": 0
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222222",
+      "phone": "+919222222222",
+      "full_name": "Praveen Kumar",
+      "username": "prav_k",
+      "avatar_url": null,
+      "bio": null,
+      "city": "Chennai",
+      "safety_contact_name": null,
+      "safety_contact_phone": null,
+      "created_at": "2026-11-11T11:05:31.956841+00:00",
+      "outings_attended": 14,
+      "outings_flaked": 1
+    },
+    {
+      "id": "33333333-3333-3333-3333-333333333333",
+      "phone": "+919333333333",
+      "full_name": "Harish V",
+      "username": "harish_v",
+      "avatar_url": null,
+      "bio": null,
+      "city": "Chennai",
+      "safety_contact_name": null,
+      "safety_contact_phone": null,
+      "created_at": "2026-11-11T11:05:31.956841+00:00",
+      "outings_attended": 6,
+      "outings_flaked": 0
+    },
+    {
+      "id": "44444444-4444-4444-4444-444444444444",
+      "phone": "+919444444444",
+      "full_name": "Naveen S",
+      "username": "naveen_s",
+      "avatar_url": null,
+      "bio": null,
+      "city": "Chennai",
+      "safety_contact_name": null,
+      "safety_contact_phone": null,
+      "created_at": "2026-11-11T11:05:31.956841+00:00",
+      "outings_attended": 3,
+      "outings_flaked": 0
+    }
+  ],
+  "plans": [
+    {
+      "id": "7c7d1e78-c84c-46ec-b07e-22ac3f1bdf0b",
+      "host_id": "00000000-0000-0000-0000-000000000001",
+      "title": "Interstellar IMAX (10th Anniversary)",
+      "category": "screen_stage",
+      "venue": "Palazzo Cinemas, Nexus Vijaya",
+      "area_neighborhood": "Vadapalani",
+      "scheduled_time": "2026-11-11T14:40:05.125956+00:00",
+      "slots_total": 2,
+      "slots_claimed": 1,
+      "split_vibe": "Self pay",
+      "notes": null,
+      "status": "open",
+      "created_at": "2026-11-11T10:40:05.125956+00:00"
+    },
+    {
+      "id": "c97d29f2-736d-4fa8-946a-487d02c12023",
+      "host_id": "00000000-0000-0000-0000-000000000001",
+      "title": "Midnight Biryani + Chai Run",
+      "category": "food_cafes",
+      "venue": "Buhari Hotel / Tea Shack",
+      "area_neighborhood": "Anna Nagar",
+      "scheduled_time": "2026-11-11T17:40:05.125956+00:00",
+      "slots_total": 4,
+      "slots_claimed": 2,
+      "split_vibe": "Split equally",
+      "notes": null,
+      "status": "open",
+      "created_at": "2026-11-11T10:40:05.125956+00:00"
+    },
+    {
+      "id": "265e7f2b-b575-46bb-a829-27095831b212",
+      "host_id": "00000000-0000-0000-0000-000000000001",
+      "title": "6v6 Turf Football Game",
+      "category": "sports_turf",
+      "venue": "Whistle Urban Sports Club",
+      "area_neighborhood": "Nungambakkam",
+      "scheduled_time": "2026-11-12T00:40:05.125956+00:00",
+      "slots_total": 6,
+      "slots_claimed": 5,
+      "split_vibe": "Split equally",
+      "notes": null,
+      "status": "open",
+      "created_at": "2026-11-11T10:40:05.125956+00:00"
+    },
+    {
+      "id": "dd7a6f49-178e-4038-a585-0d00c87e159d",
+      "host_id": "00000000-0000-0000-0000-000000000001",
+      "title": "test ",
+      "category": "screen_stage",
+      "venue": "test",
+      "area_neighborhood": "test",
+      "scheduled_time": "2026-11-11T13:45:41.168+00:00",
+      "slots_total": 2,
+      "slots_claimed": 1,
+      "split_vibe": "Split equally",
+      "notes": null,
+      "status": "open",
+      "created_at": "2026-11-11T10:45:41.91799+00:00"
+    }
+  ],
+  "plan_requests": [
+    {
+      "id": "24eb9944-9f44-4e22-a8d5-1f352f67aa54",
+      "plan_id": "265e7f2b-b575-46bb-a829-27095831b212",
+      "applicant_id": "11111111-1111-1111-1111-111111111111",
+      "pitch_message": "Playing center midfield, bringing studs.",
+      "status": "accepted",
+      "created_at": "2026-11-11T11:05:31.956841+00:00"
+    },
+    {
+      "id": "eff6d3c4-23f6-4357-8e28-eb915c68f18c",
+      "plan_id": "265e7f2b-b575-46bb-a829-27095831b212",
+      "applicant_id": "22222222-2222-2222-2222-222222222222",
+      "pitch_message": "Can play keeper or defense.",
+      "status": "accepted",
+      "created_at": "2026-11-11T11:05:31.956841+00:00"
+    },
+    {
+      "id": "17d3086e-ad8c-4d50-be0e-dab564832581",
+      "plan_id": "265e7f2b-b575-46bb-a829-27095831b212",
+      "applicant_id": "33333333-3333-3333-3333-333333333333",
+      "pitch_message": "Striker ready. Need 90 mins workout.",
+      "status": "accepted",
+      "created_at": "2026-11-11T11:05:31.956841+00:00"
+    },
+    {
+      "id": "6e3c1403-5ba1-41ef-b51a-60149ee6d302",
+      "plan_id": "265e7f2b-b575-46bb-a829-27095831b212",
+      "applicant_id": "44444444-4444-4444-4444-444444444444",
+      "pitch_message": "Midfield/wing, see you at Whistle!",
+      "status": "accepted",
+      "created_at": "2026-11-11T11:05:31.956841+00:00"
+    },
+    {
+      "id": "f6d6683d-6d04-42ff-aae8-ada221a6977a",
+      "plan_id": "c97d29f2-736d-4fa8-946a-487d02c12023",
+      "applicant_id": "11111111-1111-1111-1111-111111111111",
+      "pitch_message": "Buhari mutton biryani at midnight? Count me in!",
+      "status": "accepted",
+      "created_at": "2026-11-11T11:05:31.956841+00:00"
+    }
+  ],
+  "plan_messages": []
+}

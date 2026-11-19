@@ -1,0 +1,61 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies and Build Outputs
+node_modules
+dist
+dist-ssr
+*.local
+outly-*.apk
+
+# Python & Django
+*.pyc
+__pycache__/
+*/__pycache__/
+backend/db.sqlite3
+backend/staticfiles/
+backend/staticfiles_build/
+.venv/
+venv/
+ENV/
+
+# Android Build & Local Configuration
+android/.gradle/
+android/app/build/
+android/.idea/
+android/local.properties
+android/captures/
+.gradle/
+build/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Security & Private Credentials
+.env
+*.env
+backend/.env
+firebase-service-account.json
+backend/firebase-service-account.json
+*firebase-adminsdk*.json
+google-services.json
+*.keystore
+*.jks
+
+# Root screenshots
+/*.png
+/*.jpg
