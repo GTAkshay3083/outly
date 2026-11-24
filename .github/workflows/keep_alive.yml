@@ -1,0 +1,19 @@
+name: Outly Backend 24/7 Keep-Alive
+
+on:
+  schedule:
+    # Triggers every 10 minutes to prevent Render free-tier cold sleep
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Outly Cloud Backend
+        run: |
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 https://outly-backend-t8c3.onrender.com/api/plans/)
+          echo "Pinged Outly backend at $(date)! HTTP Status: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" -ne 200 ]; then
+            echo "Warning: Response code was $HTTP_STATUS"
+          fi
