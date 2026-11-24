@@ -1,6 +1,6 @@
 import type { OutingPlan, Request, Message, UserProfile } from './types';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const API_BASE = import.meta.env.VITE_API_URL || 'https://outly-backend-t8c3.onrender.com/api';
 
 async function fetchJson<T>(url: string, options: RequestInit = {}): Promise<T> {
   const headers = {
