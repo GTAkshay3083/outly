@@ -13,6 +13,8 @@ dist
 dist-ssr
 *.local
 outly-*.apk
+outly-*.aab
+*.old
 
 # Python & Django
 *.pyc
