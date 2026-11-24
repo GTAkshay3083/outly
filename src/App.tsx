@@ -18,7 +18,8 @@ import {
   Crown,
   Zap,
   ShieldCheck,
-  Camera
+  Camera,
+  ChevronDown
 } from 'lucide-react';
 import { api } from './api';
 import type { OutingPlan, UserProfile, TabType } from './types';
@@ -173,44 +174,38 @@ export default function App() {
     <div className="min-h-screen bg-[#08080A] text-[#F5F5F7] flex justify-center selection:bg-[#FF5E3A] selection:text-white">
       <div className="w-full max-w-md min-h-screen flex flex-col border-x border-[#1C1C1F] relative pb-28 shadow-2xl bg-[#08080A]">
         
-        {/* Top Header */}
-        <header className="px-5 pt-12 pb-3 flex items-center justify-between sticky top-0 bg-[#08080A]/95 backdrop-blur-md z-20 border-b border-[#1C1C1F]">
+        {/* Sleek Minimalist Top Header */}
+        <header className="px-5 pt-11 pb-3 flex items-center justify-between sticky top-0 bg-[#08080A]/95 backdrop-blur-xl z-20 border-b border-white/[0.06]">
           <div className="flex items-center gap-2.5">
-            <img src="/outly-logo.png" alt="outly" className="w-8 h-8 rounded-xl object-contain shadow-md shadow-[#FF5E3A]/10 border border-white/5" />
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-base font-black tracking-tight text-white lowercase">outly</span>
-                <span className="text-[9px] tracking-widest font-extrabold text-[#FF5E3A] uppercase bg-[#FF5E3A]/10 px-1.5 py-0.5 rounded border border-[#FF5E3A]/20">
-                  {activeTab === 'discover' && 'City Live'}
-                  {activeTab === 'my_plans' && 'Schedule'}
-                  {activeTab === 'squads' && 'Squads'}
-                  {activeTab === 'profile' && 'Account'}
-                </span>
-              </div>
-              <h1 className="text-xs font-semibold text-[#A1A1A6] tracking-tight">
-                {activeTab === 'profile'
-                  ? currentUserProfile?.full_name || 'My Profile'
-                  : `${currentUserProfile?.city || 'Chennai'} Feed`}
-              </h1>
-            </div>
+            <img src="/outly-logo.png" alt="outly" className="w-7 h-7 rounded-lg object-contain" />
+            <span className="text-lg font-black tracking-tight text-white lowercase">outly</span>
+
+            {activeTab === 'discover' ? (
+              <button
+                onClick={() => setShowCityModal(true)}
+                className="flex items-center gap-1.5 ml-1.5 px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-medium text-[#A1A1A6] hover:text-white hover:border-white/20 active:scale-95 transition-all"
+                title="Switch city"
+              >
+                <MapPin size={11} className="text-[#FF5E3A]" />
+                <span className="text-[11.5px] font-semibold text-white/90">{currentUserProfile?.city || 'Chennai'}</span>
+                <ChevronDown size={11} className="text-[#636366]" />
+              </button>
+            ) : (
+              <span className="text-xs font-semibold text-[#8E8E93] ml-1">
+                {activeTab === 'my_plans' && '• My Plans'}
+                {activeTab === 'squads' && '• Squads'}
+                {activeTab === 'profile' && '• Profile'}
+              </span>
+            )}
           </div>
+
           <div className="flex items-center gap-2">
             <button
               onClick={() => setStoryStudioPlan('blank')}
-              className="px-2.5 py-1.5 rounded-full bg-[#1C1C1F] border border-[#2A2A2E] text-xs font-bold text-white flex items-center gap-1 hover:border-[#FF5E3A] active:scale-95 transition-all shadow-sm"
-              title="Open Story Studio"
+              className="w-8 h-8 rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-[#A1A1A6] hover:text-white hover:border-[#FF5E3A]/40 active:scale-95 transition-all"
+              title="Create Story Card"
             >
-              <Camera size={13} className="text-[#FF5E3A]" />
-              <span className="text-[11px]">Story</span>
-            </button>
-
-            <button
-              onClick={() => setShowCityModal(true)}
-              className="px-3 py-1.5 rounded-full bg-[#121214] border border-[#2A2A2E] text-xs font-bold text-[#A1A1A6] hover:text-white active:scale-95 transition-all flex items-center gap-1.5 max-w-[140px]"
-              title="Switch city or district"
-            >
-              <MapPin size={12} className="text-[#FF5E3A] shrink-0" />
-              <span className="truncate">{currentUserProfile?.city || 'Chennai'}</span>
+              <Camera size={14} className="text-[#FF5E3A]" />
             </button>
           </div>
         </header>
@@ -218,8 +213,8 @@ export default function App() {
         {/* TAB 1: DISCOVER FEED */}
         {activeTab === 'discover' && (
           <>
-            {/* Category Carousel */}
-            <nav aria-label="Categories" className="px-5 py-3 overflow-x-auto no-scrollbar flex items-center gap-2 z-10 sticky top-[85px] bg-[#08080A]">
+            {/* Sleek Category Carousel */}
+            <nav aria-label="Categories" className="px-5 py-2.5 overflow-x-auto no-scrollbar flex items-center gap-1.5 z-10 sticky top-[72px] bg-[#08080A]/95 backdrop-blur-md">
               {CATEGORIES.map((cat) => {
                 const Icon = cat.icon;
                 const isActive = activeCategory === cat.id;
@@ -227,13 +222,13 @@ export default function App() {
                   <button
                     key={cat.id}
                     onClick={() => setActiveCategory(cat.id)}
-                    className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all active:scale-95 ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11.5px] font-medium whitespace-nowrap transition-all active:scale-95 ${
                       isActive
-                        ? 'bg-[#F5F5F7] text-[#08080A] shadow-md'
-                        : 'bg-[#121214] text-[#A1A1A6] border border-[#2A2A2E] hover:border-[#3E3E42]'
+                        ? 'bg-white text-[#08080A] font-bold shadow-sm'
+                        : 'bg-[#121214] text-[#8E8E93] border border-white/[0.06] hover:text-white'
                     }`}
                   >
-                    <Icon size={13} className={isActive ? 'text-[#08080A]' : 'text-[#A1A1A6]'} />
+                    <Icon size={12} className={isActive ? 'text-[#08080A]' : 'text-[#8E8E93]'} />
                     {cat.label}
                   </button>
                 );
