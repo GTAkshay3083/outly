@@ -32,6 +32,7 @@ import SafetyModal from './components/SafetyModal';
 import ProfileView from './components/ProfileView';
 import RatingModal from './components/RatingModal';
 import OnboardingFlow from './components/OnboardingFlow';
+import WelcomeAuthScreen from './components/WelcomeAuthScreen';
 import AuthModal from './components/AuthModal';
 import CitySelectorModal from './components/CitySelectorModal';
 import PublicProfileModal, { type PublicUserSummary } from './components/PublicProfileModal';
@@ -52,8 +53,8 @@ const CATEGORIES = [
 ];
 
 export default function App() {
-  const [currentUserId, setCurrentUserId] = useState<string>(() => {
-    return localStorage.getItem('outly_current_user_id') || '00000000-0000-0000-0000-000000000001';
+  const [currentUserId, setCurrentUserId] = useState<string | null>(() => {
+    return localStorage.getItem('outly_current_user_id') || null;
   });
 
   const [activeTab, setActiveTab] = useState<TabType>('discover');
@@ -80,6 +81,10 @@ export default function App() {
   });
 
   const fetchPlansAndPermissions = async (overrideCity?: string, overrideState?: string) => {
+    if (!currentUserId) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
 
     try {
@@ -109,11 +114,15 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    fetchPlansAndPermissions();
-    registerPushNotifications(currentUserId, (planId) => {
-      const match = plans.find((p) => p.id === planId);
-      if (match) setActiveSquadPlan(match);
-    });
+    if (currentUserId) {
+      fetchPlansAndPermissions();
+      registerPushNotifications(currentUserId, (planId) => {
+        const match = plans.find((p) => p.id === planId);
+        if (match) setActiveSquadPlan(match);
+      });
+    } else {
+      setLoading(false);
+    }
   }, [currentUserId]);
 
   const handleSwitchUser = (newUserId: string) => {
@@ -122,7 +131,7 @@ export default function App() {
   };
 
   const handleLocationSelect = async (newCity: string, newState: string) => {
-    if (!currentUserProfile) return;
+    if (!currentUserProfile || !currentUserId) return;
     try {
       const updated = await api.updateProfile(currentUserId, { city: newCity, state: newState });
       setCurrentUserProfile(updated);
@@ -169,6 +178,18 @@ export default function App() {
   const acceptedPlans = plans.filter((p) => userRequests[p.id] === 'accepted');
   const pendingPlans = plans.filter((p) => userRequests[p.id] === 'pending');
   const unlockedSquads = plans.filter((p) => p.host_id === currentUserId || userRequests[p.id] === 'accepted');
+
+  // If user is not signed in, show the sleek Welcome & Sign-In Screen
+  if (!currentUserId) {
+    return (
+      <WelcomeAuthScreen
+        onAuthenticated={(profile) => {
+          setCurrentUserId(profile.id);
+          setCurrentUserProfile(profile);
+        }}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#08080A] text-[#F5F5F7] flex justify-center selection:bg-[#FF5E3A] selection:text-white">
@@ -522,6 +543,12 @@ export default function App() {
             onProfileUpdated={(updated) => {
               setCurrentUserProfile(updated);
               fetchPlansAndPermissions();
+            }}
+            onSignOut={() => {
+              localStorage.removeItem('outly_current_user_id');
+              localStorage.removeItem('outly_user_email');
+              setCurrentUserId(null);
+              setCurrentUserProfile(null);
             }}
           />
         )}

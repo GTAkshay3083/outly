@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MapPin, RefreshCw, LogIn, AlertTriangle, Camera, Pencil, Sparkles } from 'lucide-react';
+import { MapPin, RefreshCw, LogIn, AlertTriangle, Camera, Pencil, Sparkles, LogOut } from 'lucide-react';
 import type { UserProfile } from '../types';
 import { getReputationTier } from '../utils/reputation';
 import EditProfileModal from './EditProfileModal';
@@ -13,6 +13,7 @@ interface Props {
   onOpenAuthModal: () => void;
   onOpenCityModal: () => void;
   onProfileUpdated?: (updated: UserProfile) => void;
+  onSignOut?: () => void;
 }
 
 const PRESET_USERS = [
@@ -30,6 +31,7 @@ export default function ProfileView({
   onOpenAuthModal,
   onOpenCityModal,
   onProfileUpdated,
+  onSignOut,
 }: Props) {
   const [showEditModal, setShowEditModal] = useState(false);
 
@@ -239,6 +241,24 @@ export default function ProfileView({
         </div>
         <LogIn size={16} className="text-[#FF5E3A]" />
       </button>
+
+      {/* Sign Out Button */}
+      {onSignOut && (
+        <button
+          onClick={onSignOut}
+          className="w-full p-4 rounded-3xl bg-[#121214] border border-white/[0.06] hover:border-red-500/30 text-left flex items-center justify-between group active:scale-[0.98] transition-all"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-400">
+              <LogOut size={18} />
+            </div>
+            <div>
+              <span className="font-bold text-xs text-white block">Sign Out</span>
+              <span className="text-[11px] text-[#A1A1A6]">Switch account or sign in with another email</span>
+            </div>
+          </div>
+        </button>
+      )}
 
       {/* Developer Multi-User Switcher (Dev Mode Only - Automatically hidden in production release) */}
       {import.meta.env.DEV && (
