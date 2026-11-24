@@ -58,6 +58,7 @@ export default function WelcomeAuthScreen({ onAuthenticated }: Props) {
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [gsiRendered, setGsiRendered] = useState(false);
 
   const googleBtnRef = useRef<HTMLDivElement>(null);
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || localStorage.getItem('outly_google_client_id') || '';
@@ -103,12 +104,13 @@ export default function WelcomeAuthScreen({ onAuthenticated }: Props) {
           if (googleBtnRef.current) {
             googleBtnRef.current.innerHTML = '';
             window.google.accounts.id.renderButton(googleBtnRef.current, {
-              theme: 'filled_black',
+              theme: 'outline',
               size: 'large',
               width: 320,
               shape: 'pill',
               text: 'continue_with',
             });
+            setGsiRendered(true);
           }
         } catch (e) {
           console.warn('GIS error:', e);
@@ -223,29 +225,28 @@ export default function WelcomeAuthScreen({ onAuthenticated }: Props) {
 
         {authMode === 'welcome' ? (
           <>
-            {/* Google One-Tap Container (if configured) */}
-            {clientId && (
-              <div className="flex justify-center mb-1">
-                <div ref={googleBtnRef} />
-              </div>
-            )}
+            {/* Official Google Identity Button (when rendered) */}
+            <div className={`flex justify-center w-full ${gsiRendered ? 'block' : 'hidden'}`}>
+              <div ref={googleBtnRef} className="w-full flex justify-center min-h-[44px]" />
+            </div>
 
-            {/* Native Continue with Google button */}
-            <button
-              onClick={() => {
-                // If GIS is ready, trigger it; else open email mode prefilled with @gmail.com
-                if (window.google?.accounts?.id && clientId) {
-                  window.google.accounts.id.prompt();
-                } else {
-                  setAuthMode('email');
-                }
-              }}
-              disabled={loading}
-              className="w-full py-3.5 px-5 rounded-2xl bg-[#F5F5F7] hover:bg-white text-[#08080A] font-bold text-xs flex items-center justify-center gap-2.5 shadow-md active:scale-95 transition-all"
-            >
-              <GoogleIcon />
-              <span>Continue with Google</span>
-            </button>
+            {/* Fallback Google button if iframe is loading or not rendered yet */}
+            {!gsiRendered && (
+              <button
+                onClick={() => {
+                  if (window.google?.accounts?.id && clientId) {
+                    window.google.accounts.id.prompt();
+                  } else {
+                    setAuthMode('email');
+                  }
+                }}
+                disabled={loading}
+                className="w-full py-3.5 px-5 rounded-2xl bg-[#F5F5F7] hover:bg-white text-[#08080A] font-bold text-xs flex items-center justify-center gap-2.5 shadow-md active:scale-95 transition-all"
+              >
+                <GoogleIcon />
+                <span>Continue with Google</span>
+              </button>
+            )}
 
             {/* Continue with Email */}
             <button
