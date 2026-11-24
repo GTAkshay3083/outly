@@ -156,24 +156,6 @@ export default function WelcomeAuthScreen({ onAuthenticated }: Props) {
     }
   };
 
-  // Quick 1-tap demo sign-in for testing
-  const handleQuickDemoSignIn = (demoEmail: string, demoName: string) => {
-    setEmail(demoEmail);
-    setFullName(demoName);
-    setLoading(true);
-    setErrorMsg(null);
-    api.googleAuth(demoEmail, demoName, `https://api.dicebear.com/7.x/bottts/svg?seed=${demoName}`)
-      .then((profile) => {
-        localStorage.setItem('outly_current_user_id', profile.id);
-        localStorage.setItem('outly_user_email', demoEmail);
-        onAuthenticated(profile);
-      })
-      .catch((err) => {
-        setErrorMsg(err.message || 'Demo sign-in failed.');
-        setLoading(false);
-      });
-  };
-
   return (
     <div className="min-h-screen bg-[#08080A] text-[#F5F5F7] flex flex-col justify-between p-6 max-w-md mx-auto relative overflow-hidden">
       {/* Background ambient glow */}
@@ -274,34 +256,6 @@ export default function WelcomeAuthScreen({ onAuthenticated }: Props) {
               <Mail size={15} className="text-[#FF5E3A]" />
               <span>Continue with Email or Gmail</span>
             </button>
-
-            {/* Quick 1-Tap Demo Switcher */}
-            <div className="pt-2">
-              <div className="flex items-center gap-2 my-2">
-                <div className="flex-1 h-px bg-white/[0.06]" />
-                <span className="text-[10px] uppercase font-bold text-[#636366] tracking-wider">Instant 1-Tap Sign In</span>
-                <div className="flex-1 h-px bg-white/[0.06]" />
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleQuickDemoSignIn('akshay@outly.app', 'Akshay Rathinam')}
-                  className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-[#FF5E3A]/40 text-left active:scale-95 transition-all"
-                >
-                  <span className="text-[11px] font-bold text-white block truncate">Akshay Rathinam</span>
-                  <span className="text-[10px] text-[#8E8E93] block truncate">Host • 100% Pull-up</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleQuickDemoSignIn('priya@outly.app', 'Priya Sharma')}
-                  className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-[#FF5E3A]/40 text-left active:scale-95 transition-all"
-                >
-                  <span className="text-[11px] font-bold text-white block truncate">Priya Sharma</span>
-                  <span className="text-[10px] text-[#8E8E93] block truncate">Squad Lead • Chennai</span>
-                </button>
-              </div>
-            </div>
           </>
         ) : (
           /* Email / Gmail Form */

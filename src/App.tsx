@@ -125,11 +125,6 @@ export default function App() {
     }
   }, [currentUserId]);
 
-  const handleSwitchUser = (newUserId: string) => {
-    localStorage.setItem('outly_current_user_id', newUserId);
-    setCurrentUserId(newUserId);
-  };
-
   const handleLocationSelect = async (newCity: string, newState: string) => {
     if (!currentUserProfile || !currentUserId) return;
     try {
@@ -534,8 +529,6 @@ export default function App() {
         {activeTab === 'profile' && (
           <ProfileView
             profile={currentUserProfile}
-            currentUserId={currentUserId}
-            onSwitchUser={handleSwitchUser}
             onCityChange={(c, s) => handleLocationSelect(c, s || 'Tamil Nadu')}
             onOpenSafetyModal={() => setShowSafetyModal(true)}
             onOpenAuthModal={() => setShowAuthModal(true)}

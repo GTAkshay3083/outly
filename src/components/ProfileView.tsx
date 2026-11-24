@@ -1,13 +1,11 @@
 import { useState } from 'react';
-import { MapPin, RefreshCw, LogIn, AlertTriangle, Camera, Pencil, Sparkles, LogOut } from 'lucide-react';
+import { MapPin, LogIn, AlertTriangle, Camera, Pencil, Sparkles, LogOut } from 'lucide-react';
 import type { UserProfile } from '../types';
 import { getReputationTier } from '../utils/reputation';
 import EditProfileModal from './EditProfileModal';
 
 interface Props {
   profile: UserProfile | null;
-  currentUserId: string;
-  onSwitchUser: (userId: string) => void;
   onCityChange: (city: string, state?: string) => void;
   onOpenSafetyModal: () => void;
   onOpenAuthModal: () => void;
@@ -16,16 +14,8 @@ interface Props {
   onSignOut?: () => void;
 }
 
-const PRESET_USERS = [
-  { id: '00000000-0000-0000-0000-000000000001', name: 'Akshay (Host & Creator)', username: 'akshay' },
-  { id: '11111111-1111-1111-1111-111111111111', name: 'Siddharth R (100% Reliable Member)', username: 'sid_r' },
-  { id: '22222222-2222-2222-2222-222222222222', name: 'Praveen Kumar (Member with 1 Flake)', username: 'prav_k' },
-];
-
 export default function ProfileView({
   profile,
-  currentUserId,
-  onSwitchUser,
   onCityChange,
   onOpenSafetyModal,
   onOpenAuthModal,
@@ -258,42 +248,6 @@ export default function ProfileView({
             </div>
           </div>
         </button>
-      )}
-
-      {/* Developer Multi-User Switcher (Dev Mode Only - Automatically hidden in production release) */}
-      {import.meta.env.DEV && (
-        <div className="p-5 rounded-3xl bg-[#08080A] border border-[#FF5E3A]/30 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#FF5E3A] flex items-center gap-1.5">
-              <RefreshCw size={12} /> Test Multi-User Switcher
-            </span>
-            <span className="text-[9px] uppercase font-black px-2 py-0.5 rounded bg-[#FF5E3A]/15 text-[#FF5E3A] border border-[#FF5E3A]/30">
-              Dev Mode Only
-            </span>
-          </div>
-          <p className="text-[11px] text-[#A1A1A6] leading-relaxed">
-            This panel only appears during local development so you can test hosting outings as Akshay, then applying and pitching from Siddharth or Praveen on a single device. Real users in the released app will never see this.
-          </p>
-          <div className="space-y-2">
-            {PRESET_USERS.map((u) => {
-              const isCurrent = u.id === currentUserId;
-              return (
-                <button
-                  key={u.id}
-                  onClick={() => onSwitchUser(u.id)}
-                  className={`w-full p-2.5 rounded-xl text-left text-xs font-semibold border flex items-center justify-between transition-all ${
-                    isCurrent
-                      ? 'bg-[#1C1C1F] border-[#1DB954] text-[#1DB954]'
-                      : 'bg-[#121214] border-[#2A2A2E] text-[#A1A1A6] hover:border-[#3E3E42]'
-                  }`}
-                >
-                  <span>{u.name}</span>
-                  {isCurrent && <span className="text-[10px] font-bold uppercase text-[#1DB954]">Active</span>}
-                </button>
-              );
-            })}
-          </div>
-        </div>
       )}
 
       {/* Edit Profile Modal */}

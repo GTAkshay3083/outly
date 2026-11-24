@@ -236,44 +236,33 @@ export default function AuthModal({ onSuccess, onClose }: Props) {
         <div className="my-5 flex items-center gap-3">
           <div className="flex-1 h-px bg-[#2A2A2E]" />
           <span className="text-[10px] text-[#636366] font-bold uppercase tracking-wider">
-            or instant test login
+            or sign in with email
           </span>
           <div className="flex-1 h-px bg-[#2A2A2E]" />
         </div>
 
-        {/* Instant 1-Click Simulation Button */}
-        <button
-          onClick={() => handleSimulateLogin('alex.chennai@gmail.com', 'Alex Kumar')}
-          disabled={submitting}
-          className="w-full py-3 rounded-2xl bg-[#1C1C1F] hover:bg-[#252529] border border-[#2A2A2E] text-white font-bold text-xs active:scale-95 transition-all flex items-center justify-center gap-2 shadow"
-        >
-          <span>⚡ Instant Test Login (Alex Kumar)</span>
-        </button>
-
-        {/* Custom email tester for dev */}
-        <div className="mt-3 space-y-2">
-          <div className="grid grid-cols-2 gap-2">
-            <input
-              type="email"
-              placeholder="custom@gmail.com"
-              value={googleEmail}
-              onChange={(e) => setGoogleEmail(e.target.value)}
-              className="bg-[#08080A] border border-[#2A2A2E] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#FF5E3A]"
-            />
-            <input
-              type="text"
-              placeholder="Full Name"
-              value={googleName}
-              onChange={(e) => setGoogleName(e.target.value)}
-              className="bg-[#08080A] border border-[#2A2A2E] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#FF5E3A]"
-            />
-          </div>
+        {/* Email Sign In */}
+        <div className="space-y-2.5">
+          <input
+            type="email"
+            placeholder="yourname@gmail.com"
+            value={googleEmail}
+            onChange={(e) => setGoogleEmail(e.target.value)}
+            className="w-full bg-[#08080A] border border-[#2A2A2E] focus:border-[#FF5E3A] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none"
+          />
+          <input
+            type="text"
+            placeholder="Full Name (optional for existing users)"
+            value={googleName}
+            onChange={(e) => setGoogleName(e.target.value)}
+            className="w-full bg-[#08080A] border border-[#2A2A2E] focus:border-[#FF5E3A] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none"
+          />
           <button
-            onClick={() => handleSimulateLogin(googleEmail || 'newuser@gmail.com', googleName || 'New Outly Member')}
-            disabled={submitting}
-            className="w-full py-2.5 rounded-xl bg-[#08080A] hover:bg-[#121214] border border-[#2A2A2E] text-xs font-semibold text-[#A1A1A6] hover:text-white active:scale-95 transition-all"
+            onClick={() => handleSimulateLogin(googleEmail, googleName || googleEmail.split('@')[0])}
+            disabled={submitting || !googleEmail.trim()}
+            className="w-full py-3 rounded-xl bg-[#FF5E3A] hover:bg-[#FF451A] text-white font-bold text-xs disabled:opacity-40 active:scale-95 transition-all shadow"
           >
-            {submitting ? 'Connecting...' : 'Connect with Custom Name'}
+            {submitting ? 'Signing in...' : 'Sign In with Email'}
           </button>
         </div>
 
