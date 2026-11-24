@@ -19,16 +19,18 @@ import {
   Zap,
   ShieldCheck,
   Camera,
-  ChevronDown
+  ChevronDown,
+  Settings
 } from 'lucide-react';
 import { api } from './api';
 import type { OutingPlan, UserProfile, TabType } from './types';
-import { initNativeStatusBar, registerPushNotifications } from './services/nativeService';
+import { initNativeStatusBar, updateNativeStatusBar, registerPushNotifications } from './services/nativeService';
 import BottomNav from './components/BottomNav';
 import CreatePlanModal from './components/CreatePlanModal';
 import PlanDetailModal from './components/PlanDetailModal';
 import SquadRoomModal from './components/SquadRoomModal';
 import SafetyModal from './components/SafetyModal';
+import SettingsModal from './components/SettingsModal';
 import ProfileView from './components/ProfileView';
 import RatingModal from './components/RatingModal';
 import OnboardingFlow from './components/OnboardingFlow';
@@ -75,6 +77,12 @@ export default function App() {
   const [storyStudioPlan, setStoryStudioPlan] = useState<OutingPlan | null | 'blank'>(null);
   const [ratingTarget, setRatingTarget] = useState<{ planTitle: string; memberId: string; memberName: string } | null>(null);
 
+  // Theme & Settings
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    return (localStorage.getItem('outly_theme') as 'dark' | 'light') || 'dark';
+  });
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+
   // Safety timer state for badge
   const [hasActiveSafetyTimer, setHasActiveSafetyTimer] = useState<boolean>(() => {
     return Boolean(localStorage.getItem('outly_deadman_deadline'));
@@ -112,6 +120,13 @@ export default function App() {
   useEffect(() => {
     initNativeStatusBar();
   }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.remove('dark', 'light');
+    document.documentElement.classList.add(theme);
+    localStorage.setItem('outly_theme', theme);
+    updateNativeStatusBar(theme === 'dark');
+  }, [theme]);
 
   useEffect(() => {
     if (currentUserId) {
@@ -186,28 +201,40 @@ export default function App() {
     );
   }
 
+  const isDark = theme === 'dark';
+
   return (
-    <div className="min-h-screen bg-[#08080A] text-[#F5F5F7] flex justify-center selection:bg-[#FF5E3A] selection:text-white">
-      <div className="w-full max-w-md min-h-screen flex flex-col border-x border-[#1C1C1F] relative pb-28 shadow-2xl bg-[#08080A]">
+    <div className={`min-h-screen flex justify-center selection:bg-[#FF5E3A] selection:text-white transition-colors duration-200 ${
+      isDark ? 'bg-[#08080A] text-[#F5F5F7]' : 'bg-[#F4F4F6] text-[#09090B]'
+    }`}>
+      <div className={`w-full max-w-md min-h-screen flex flex-col relative pb-28 shadow-2xl transition-colors duration-200 ${
+        isDark ? 'border-x border-[#1C1C1F] bg-[#08080A]' : 'border-x border-black/[0.06] bg-[#F4F4F6]'
+      }`}>
         
         {/* Sleek Minimalist Top Header */}
-        <header className="px-5 pt-11 pb-3 flex items-center justify-between sticky top-0 bg-[#08080A]/95 backdrop-blur-xl z-20 border-b border-white/[0.06]">
+        <header className={`px-5 pt-11 pb-3 flex items-center justify-between sticky top-0 backdrop-blur-xl z-20 transition-colors duration-200 ${
+          isDark ? 'bg-[#08080A]/95 border-b border-white/[0.06]' : 'bg-[#F4F4F6]/95 border-b border-black/[0.06]'
+        }`}>
           <div className="flex items-center gap-2.5">
             <img src="/outly-logo.png" alt="outly" className="w-7 h-7 rounded-lg object-contain" />
-            <span className="text-lg font-black tracking-tight text-white lowercase">outly</span>
+            <span className={`text-lg font-black tracking-tight lowercase ${isDark ? 'text-white' : 'text-[#09090B]'}`}>outly</span>
 
             {activeTab === 'discover' ? (
               <button
                 onClick={() => setShowCityModal(true)}
-                className="flex items-center gap-1.5 ml-1.5 px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-medium text-[#A1A1A6] hover:text-white hover:border-white/20 active:scale-95 transition-all"
+                className={`flex items-center gap-1.5 ml-1.5 px-2.5 py-1 rounded-full border text-xs font-medium active:scale-95 transition-all ${
+                  isDark
+                    ? 'bg-white/[0.04] border-white/[0.08] text-[#A1A1A6] hover:text-white hover:border-white/20'
+                    : 'bg-black/[0.04] border-black/[0.08] text-[#71717A] hover:text-black hover:border-black/20'
+                }`}
                 title="Switch city"
               >
                 <MapPin size={11} className="text-[#FF5E3A]" />
-                <span className="text-[11.5px] font-semibold text-white/90">{currentUserProfile?.city || 'Chennai'}</span>
+                <span className={`text-[11.5px] font-semibold ${isDark ? 'text-white/90' : 'text-black/90'}`}>{currentUserProfile?.city || 'Chennai'}</span>
                 <ChevronDown size={11} className="text-[#636366]" />
               </button>
             ) : (
-              <span className="text-xs font-semibold text-[#8E8E93] ml-1">
+              <span className={`text-xs font-semibold ml-1 ${isDark ? 'text-[#8E8E93]' : 'text-[#71717A]'}`}>
                 {activeTab === 'my_plans' && '• My Plans'}
                 {activeTab === 'squads' && '• Squads'}
                 {activeTab === 'profile' && '• Profile'}
@@ -218,10 +245,26 @@ export default function App() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setStoryStudioPlan('blank')}
-              className="w-8 h-8 rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-[#A1A1A6] hover:text-white hover:border-[#FF5E3A]/40 active:scale-95 transition-all"
+              className={`w-8 h-8 rounded-full border flex items-center justify-center active:scale-95 transition-all ${
+                isDark
+                  ? 'bg-white/[0.04] border-white/[0.08] text-[#A1A1A6] hover:text-white hover:border-[#FF5E3A]/40'
+                  : 'bg-black/[0.04] border-black/[0.08] text-[#71717A] hover:text-black hover:border-[#FF5E3A]/40 shadow-sm'
+              }`}
               title="Create Story Card"
             >
               <Camera size={14} className="text-[#FF5E3A]" />
+            </button>
+
+            <button
+              onClick={() => setShowSettingsModal(true)}
+              className={`w-8 h-8 rounded-full border flex items-center justify-center active:scale-95 transition-all ${
+                isDark
+                  ? 'bg-white/[0.04] border-white/[0.08] text-[#A1A1A6] hover:text-white hover:border-[#FF5E3A]/40'
+                  : 'bg-black/[0.04] border-black/[0.08] text-[#71717A] hover:text-black hover:border-[#FF5E3A]/40 shadow-sm'
+              }`}
+              title="Settings & Preferences"
+            >
+              <Settings size={14} className="text-[#A1A1A6] hover:text-[#FF5E3A]" />
             </button>
           </div>
         </header>
@@ -230,7 +273,9 @@ export default function App() {
         {activeTab === 'discover' && (
           <>
             {/* Sleek Category Carousel */}
-            <nav aria-label="Categories" className="px-5 py-2.5 overflow-x-auto no-scrollbar flex items-center gap-1.5 z-10 sticky top-[72px] bg-[#08080A]/95 backdrop-blur-md">
+            <nav aria-label="Categories" className={`px-5 py-2.5 overflow-x-auto no-scrollbar flex items-center gap-1.5 z-10 sticky top-[72px] backdrop-blur-md transition-colors duration-200 ${
+              isDark ? 'bg-[#08080A]/95' : 'bg-[#F4F4F6]/95'
+            }`}>
               {CATEGORIES.map((cat) => {
                 const Icon = cat.icon;
                 const isActive = activeCategory === cat.id;
@@ -240,11 +285,13 @@ export default function App() {
                     onClick={() => setActiveCategory(cat.id)}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11.5px] font-medium whitespace-nowrap transition-all active:scale-95 ${
                       isActive
-                        ? 'bg-white text-[#08080A] font-bold shadow-sm'
-                        : 'bg-[#121214] text-[#8E8E93] border border-white/[0.06] hover:text-white'
+                        ? 'bg-[#FF5E3A] text-white font-bold shadow-md shadow-[#FF5E3A]/25'
+                        : isDark
+                          ? 'bg-[#121214] text-[#8E8E93] border border-white/[0.06] hover:text-white'
+                          : 'bg-white text-[#71717A] border border-black/[0.06] hover:text-black shadow-sm'
                     }`}
                   >
-                    <Icon size={12} className={isActive ? 'text-[#08080A]' : 'text-[#8E8E93]'} />
+                    <Icon size={12} className={isActive ? 'text-white' : (isDark ? 'text-[#8E8E93]' : 'text-[#71717A]')} />
                     {cat.label}
                   </button>
                 );
@@ -274,31 +321,33 @@ export default function App() {
                     <div
                       key={plan.id}
                       onClick={() => setSelectedPlan(plan)}
-                      className={`group relative bg-[#121214] border ${
+                      className={`group relative border transition-all active:scale-[0.98] cursor-pointer overflow-hidden shadow-lg rounded-3xl p-5 flex flex-col justify-between ${
                         plan.is_beacon 
                           ? 'border-[#FF5E3A]/70 shadow-lg shadow-[#FF5E3A]/15 ring-1 ring-[#FF5E3A]/30' 
-                          : 'border-[#1C1C1F] hover:border-[#2A2A2E]'
-                      } rounded-3xl p-5 flex flex-col justify-between transition-all active:scale-[0.98] cursor-pointer overflow-hidden shadow-lg`}
+                          : isDark ? 'border-[#1C1C1F] hover:border-[#2A2A2E]' : 'border-black/[0.08] hover:border-black/20'
+                      } ${isDark ? 'bg-[#121214]' : 'bg-white shadow-sm'}`}
                     >
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-1.5 flex-wrap">
                           <span className={`px-3 py-1 rounded-full text-[11px] font-bold tracking-wide uppercase flex items-center gap-1.5 ${
                             plan.is_beacon 
                               ? 'bg-[#FF5E3A] text-white shadow-md shadow-[#FF5E3A]/30 animate-pulse' 
-                              : 'bg-[#1C1C1F] text-[#FF5E3A] border border-[#FF5E3A]/20'
+                              : isDark 
+                                ? 'bg-[#1C1C1F] text-[#FF5E3A] border border-[#FF5E3A]/20' 
+                                : 'bg-[#ECECEF] text-[#FF5E3A] border border-[#FF5E3A]/20'
                           }`}>
                             {plan.is_beacon ? <Zap size={12} /> : <Clock size={12} />}
                             {plan.is_beacon ? '⚡ Live Beacon' : formatPlanTime(plan.scheduled_time)}
                           </span>
 
                           {plan.squad_type === 'girls_only' && (
-                            <span className="px-2.5 py-1 rounded-full bg-pink-500/15 border border-pink-500/30 text-[10px] font-bold text-pink-300 flex items-center gap-1">
+                            <span className="px-2.5 py-1 rounded-full bg-pink-500/15 border border-pink-500/30 text-[10px] font-bold text-pink-400 flex items-center gap-1">
                               🌸 Girls-Only
                             </span>
                           )}
 
                           {plan.squad_type === 'balanced' && (
-                            <span className="px-2.5 py-1 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-[10px] font-bold text-cyan-300 flex items-center gap-1">
+                            <span className="px-2.5 py-1 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-[10px] font-bold text-cyan-400 flex items-center gap-1">
                               ⚖️ 50/50
                             </span>
                           )}
@@ -310,7 +359,9 @@ export default function App() {
                       </div>
 
                       <div>
-                        <h3 className="text-lg font-bold text-[#F5F5F7] tracking-tight leading-snug group-hover:text-white transition-colors">
+                        <h3 className={`text-lg font-bold tracking-tight leading-snug transition-colors ${
+                          isDark ? 'text-[#F5F5F7] group-hover:text-white' : 'text-[#09090B] group-hover:text-black'
+                        }`}>
                           {plan.title}
                         </h3>
                         <div className="flex items-center gap-1.5 mt-2 text-xs text-[#A1A1A6]">
@@ -319,7 +370,9 @@ export default function App() {
                         </div>
                       </div>
 
-                      <div className="mt-5 pt-4 border-t border-[#1C1C1F] flex items-center justify-between text-xs text-[#636366]">
+                      <div className={`mt-5 pt-4 border-t flex items-center justify-between text-xs text-[#636366] ${
+                        isDark ? 'border-[#1C1C1F]' : 'border-black/[0.06]'
+                      }`}>
                         <div 
                           onClick={(e) => {
                             e.stopPropagation();
@@ -529,10 +582,12 @@ export default function App() {
         {activeTab === 'profile' && (
           <ProfileView
             profile={currentUserProfile}
+            theme={theme}
             onCityChange={(c, s) => handleLocationSelect(c, s || 'Tamil Nadu')}
             onOpenSafetyModal={() => setShowSafetyModal(true)}
             onOpenAuthModal={() => setShowAuthModal(true)}
             onOpenCityModal={() => setShowCityModal(true)}
+            onOpenSettings={() => setShowSettingsModal(true)}
             onProfileUpdated={(updated) => {
               setCurrentUserProfile(updated);
               fetchPlansAndPermissions();
@@ -556,6 +611,7 @@ export default function App() {
           }}
           onOpenSafetyModal={() => setShowSafetyModal(true)}
           hasActiveSafetyTimer={hasActiveSafetyTimer}
+          theme={theme}
         />
 
         {/* MODALS */}
@@ -667,6 +723,27 @@ export default function App() {
           <StoryStudioModal
             plan={storyStudioPlan === 'blank' ? null : storyStudioPlan}
             onClose={() => setStoryStudioPlan(null)}
+          />
+        )}
+
+        {/* Complete Settings Department Hub */}
+        {showSettingsModal && (
+          <SettingsModal
+            profile={currentUserProfile}
+            theme={theme}
+            onThemeChange={setTheme}
+            onClose={() => setShowSettingsModal(false)}
+            onSignOut={() => {
+              localStorage.removeItem('outly_current_user_id');
+              localStorage.removeItem('outly_user_email');
+              setCurrentUserId(null);
+              setCurrentUserProfile(null);
+              setShowSettingsModal(false);
+            }}
+            onProfileUpdated={(updated) => {
+              setCurrentUserProfile(updated);
+              fetchPlansAndPermissions();
+            }}
           />
         )}
 

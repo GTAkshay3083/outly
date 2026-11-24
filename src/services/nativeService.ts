@@ -19,6 +19,22 @@ export async function initNativeStatusBar(): Promise<void> {
   }
 }
 
+export async function updateNativeStatusBar(isDark: boolean): Promise<void> {
+  if (!isNative) return;
+
+  try {
+    if (isDark) {
+      await StatusBar.setStyle({ style: Style.Dark });
+      await StatusBar.setBackgroundColor({ color: '#08080A' });
+    } else {
+      await StatusBar.setStyle({ style: Style.Light });
+      await StatusBar.setBackgroundColor({ color: '#F4F4F6' });
+    }
+  } catch (err) {
+    console.warn('StatusBar update error:', err);
+  }
+}
+
 /**
  * Request Push Notification permissions, register with FCM,
  * and sync the device token to Supabase for the Django backend to reach this device.

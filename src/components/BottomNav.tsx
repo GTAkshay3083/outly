@@ -7,6 +7,7 @@ interface Props {
   onOpenCreateModal: () => void;
   onOpenSafetyModal: () => void;
   hasActiveSafetyTimer?: boolean;
+  theme?: 'dark' | 'light';
 }
 
 export default function BottomNav({
@@ -15,7 +16,10 @@ export default function BottomNav({
   onOpenCreateModal,
   onOpenSafetyModal,
   hasActiveSafetyTimer,
+  theme = 'dark',
 }: Props) {
+  const isDark = theme === 'dark';
+
   return (
     <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md px-4 pb-4 pointer-events-none z-30">
       
@@ -26,7 +30,9 @@ export default function BottomNav({
           className={`px-3 py-1.5 rounded-full backdrop-blur-xl border text-[11px] font-extrabold flex items-center gap-1.5 shadow-xl active:scale-95 transition-all ${
             hasActiveSafetyTimer
               ? 'bg-[#1DB954]/20 border-[#1DB954] text-[#1DB954] animate-pulse'
-              : 'bg-[#121214]/90 border-[#2A2A2E] text-[#A1A1A6] hover:text-white'
+              : isDark
+                ? 'bg-[#121214]/90 border-[#2A2A2E] text-[#A1A1A6] hover:text-white'
+                : 'bg-white/95 border-black/[0.08] text-[#71717A] hover:text-black shadow-md'
           }`}
         >
           <ShieldCheck size={14} className={hasActiveSafetyTimer ? 'text-[#1DB954]' : 'text-[#1DB954]'} />
@@ -35,13 +41,17 @@ export default function BottomNav({
       </div>
 
       {/* Main Glass Nav Dock */}
-      <div className="pointer-events-auto w-full flex items-center justify-between bg-[#121214]/90 backdrop-blur-xl border border-[#2A2A2E] px-4 py-2 rounded-full shadow-2xl">
+      <div className={`pointer-events-auto w-full flex items-center justify-between backdrop-blur-xl border px-4 py-2 rounded-full shadow-2xl transition-colors ${
+        isDark ? 'bg-[#121214]/90 border-[#2A2A2E]' : 'bg-white/95 border-black/[0.08] shadow-lg'
+      }`}>
         
         {/* Discover Tab */}
         <button
           onClick={() => onTabChange('discover')}
           className={`flex flex-col items-center gap-1 transition-all ${
-            activeTab === 'discover' ? 'text-[#FF5E3A]' : 'text-[#636366] hover:text-[#A1A1A6]'
+            activeTab === 'discover' 
+              ? 'text-[#FF5E3A]' 
+              : isDark ? 'text-[#636366] hover:text-[#A1A1A6]' : 'text-[#A1A1AA] hover:text-[#71717A]'
           }`}
         >
           <Compass size={20} />
@@ -52,7 +62,9 @@ export default function BottomNav({
         <button
           onClick={() => onTabChange('my_plans')}
           className={`flex flex-col items-center gap-1 transition-all ${
-            activeTab === 'my_plans' ? 'text-[#FF5E3A]' : 'text-[#636366] hover:text-[#A1A1A6]'
+            activeTab === 'my_plans' 
+              ? 'text-[#FF5E3A]' 
+              : isDark ? 'text-[#636366] hover:text-[#A1A1A6]' : 'text-[#A1A1AA] hover:text-[#71717A]'
           }`}
         >
           <Calendar size={20} />
@@ -72,7 +84,9 @@ export default function BottomNav({
         <button
           onClick={() => onTabChange('squads')}
           className={`flex flex-col items-center gap-1 transition-all ${
-            activeTab === 'squads' ? 'text-[#FF5E3A]' : 'text-[#636366] hover:text-[#A1A1A6]'
+            activeTab === 'squads' 
+              ? 'text-[#FF5E3A]' 
+              : isDark ? 'text-[#636366] hover:text-[#A1A1A6]' : 'text-[#A1A1AA] hover:text-[#71717A]'
           }`}
         >
           <MessageSquare size={20} />
@@ -83,7 +97,9 @@ export default function BottomNav({
         <button
           onClick={() => onTabChange('profile')}
           className={`flex flex-col items-center gap-1 transition-all ${
-            activeTab === 'profile' ? 'text-[#FF5E3A]' : 'text-[#636366] hover:text-[#A1A1A6]'
+            activeTab === 'profile' 
+              ? 'text-[#FF5E3A]' 
+              : isDark ? 'text-[#636366] hover:text-[#A1A1A6]' : 'text-[#A1A1AA] hover:text-[#71717A]'
           }`}
         >
           <User size={20} />
